@@ -5,7 +5,10 @@ services:
     ports:
       - "8008:8000"
     gpus:
-      - "device=8"
+      - device_ids:
+          - "8"
+        capabilities:
+          - gpu
     volumes:
       - /shareddatasets/huggingface_models:/app/models  # Mount directory for model weights
       - ./outputs:/app/outputs  # Mount directory for output files
