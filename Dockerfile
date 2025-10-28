@@ -11,7 +11,10 @@ WORKDIR /app
 
 # Copy the DeepSeek-OCR vLLM implementation
 RUN git clone https://github.com/deepseek-ai/DeepSeek-OCR.git
-COPY DeepSeek-OCR/DeepSeek-OCR-master/DeepSeek-OCR-vllm/ ./DeepSeek-OCR-vllm/
+RUN set -eux; \
+    d=$(find DeepSeek-OCR -type d -name DeepSeek-OCR-vllm | head -n1); \
+    echo "Found vLLM dir: $d"; \
+    cp -r "$d" ./DeepSeek-OCR-vllm
 
 # Copy custom files to replace the originals (transparent replacement approach)
 COPY custom_config.py ./DeepSeek-OCR-vllm/config.py
@@ -26,8 +29,8 @@ COPY custom_run_dpsk_ocr_eval_batch.py ./DeepSeek-OCR-vllm/run_dpsk_ocr_eval_bat
 # Copy the startup script
 COPY start_server.py .
 
-# Copy requirements file and install additional dependencies
-COPY DeepSeek-OCR/requirements.txt .
+# Install DeepSeek-OCR requirements if present, then additional dependencies
+RUN if [ -f DeepSeek-OCR/requirements.txt ]; then pip install --no-cache-dir -r DeepSeek-OCR/requirements.txt; fi
 
 # Install Python dependencies excluding conflicting packages
 RUN pip install --no-cache-dir \
