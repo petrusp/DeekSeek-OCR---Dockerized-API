@@ -30,7 +30,8 @@ sys.path.insert(0, '/app/DeepSeek-OCR-vllm')
 if torch.version.cuda == '11.8':
     os.environ["TRITON_PTXAS_PATH"] = "/usr/local/cuda-11.8/bin/ptxas"
 os.environ['VLLM_USE_V1'] = '0'
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+if "CUDA_VISIBLE_DEVICES" not in os.environ:
+    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 # Import DeepSeek-OCR components
 from config import INPUT_PATH, OUTPUT_PATH, PROMPT, CROP_MODE, MAX_CONCURRENCY, NUM_WORKERS

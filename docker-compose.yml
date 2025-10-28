@@ -4,11 +4,13 @@ services:
     container_name: deepseek-ocr-vllm
     ports:
       - "8008:8000"
+    gpus:
+      - "device=8"
     volumes:
       - /shareddatasets/huggingface_models:/app/models  # Mount directory for model weights
       - ./outputs:/app/outputs  # Mount directory for output files
     environment:
-      - CUDA_VISIBLE_DEVICES=8
+      - NVIDIA_VISIBLE_DEVICES=8
       - MODEL_PATH=/app/models/DeepSeek-OCR  # Update with your model path
       - MAX_CONCURRENCY=5  # Adjust based on your GPU memory
       - GPU_MEMORY_UTILIZATION=0.85  # Adjust based on your GPU memory
@@ -17,7 +19,7 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
+              device_ids: ["8"]
               capabilities: [gpu]
     restart: unless-stopped
     healthcheck:
