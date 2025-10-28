@@ -171,6 +171,31 @@ ls data/*-MD.md
 ls data/images/
 ```
 
+#### Run in Docker (via docker-compose)
+
+```bash
+# 1) Start the DeepSeek-OCR API container
+docker-compose up -d deepseek-ocr
+
+# 2) Run the enhanced processor inside a lightweight Python container
+#    This will scan ./data, call the API, write markdown to ./data and images to ./data/images
+docker-compose run --rm markdown-processor
+
+# Alternative: bring it up once (it exits when finished)
+docker-compose up markdown-processor
+
+# 3) Check results on the host
+ls data/*-MD.md
+ls data/images/
+```
+
+- **DATA_DIR**: Defaults to `data`. Override with `DATA_DIR=/some/path` on the `markdown-processor` service if needed.
+- **API_BASE_URL**: Defaults to `http://deepseek-ocr:8000` inside Docker. Override with another URL if your API runs elsewhere.
+
+Notes:
+- The processor uses the internal Docker network to reach the API at `http://deepseek-ocr:8000`.
+- Outputs and logs (e.g., `pdf_processor.log`) are written into the project directory mounted in the container.
+
 ---
 
 ### 3. pdf_to_ocr_enhanced.py

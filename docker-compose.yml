@@ -26,3 +26,20 @@ services:
       timeout: 10s
       retries: 3
       start_period: 120s  # Give time for model to load
+
+  markdown-processor:
+    image: python:3.10-slim
+    container_name: markdown-processor
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    environment:
+      - DATA_DIR=/app/data
+      - API_BASE_URL=http://deepseek-ocr:8000
+    depends_on:
+      deepseek-ocr:
+        condition: service_healthy
+    command: >
+      sh -c "pip install --no-cache-dir PyMuPDF Pillow numpy requests && python pdf_to_markdown_processor_enhanced.py"
+    restart: "no"
