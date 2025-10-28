@@ -10,6 +10,7 @@ USER root
 WORKDIR /app
 
 # Copy the DeepSeek-OCR vLLM implementation
+RUN git clone https://github.com/deepseek-ai/DeepSeek-OCR.git
 COPY DeepSeek-OCR/DeepSeek-OCR-master/DeepSeek-OCR-vllm/ ./DeepSeek-OCR-vllm/
 
 # Copy custom files to replace the originals (transparent replacement approach)

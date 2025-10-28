@@ -450,10 +450,14 @@ class PDFToMarkdownProcessor:
 def main():
     """Main function to run the PDF processor"""
     print(f"{Colors.BLUE}PDF to Markdown Processor (Enhanced){Colors.RESET}")
-    print(f"{Colors.YELLOW}Scanning /data folder for PDF files...{Colors.RESET}")
+    data_dir = os.getenv("DATA_DIR", "data")
+    api_base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
+    print(f"{Colors.YELLOW}Scanning {data_dir} folder for PDF files...{Colors.RESET}")
     
     try:
         processor = PDFToMarkdownProcessor(
+            data_folder=data_dir,
+            api_base_url=api_base_url,
             extract_images=True,
             create_images_folder=True
         )
